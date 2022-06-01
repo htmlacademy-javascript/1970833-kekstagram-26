@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм»
 
 * Студент: [Андрей Луцевич](https://up.htmlacademy.ru/javascript/26/user/1970833).
-* Наставник: `Неизвестно`.
+* Наставник: [Alex Elkin](https://htmlacademy.ru/profile/alex_elkin).
 
 ---
 

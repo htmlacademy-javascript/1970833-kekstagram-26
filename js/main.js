@@ -48,25 +48,24 @@ const NAME = [
 ];
 
 const NUMBER_GENERATION_OBJECTS = 25;
+const idArray = Array.from({length:25}, (_, k)=> ++k);
+const idCommentsArray = Array.from({length:25}, (_, k)=> ++k);
 
-const getId = Array.from({length:25}, (_, k)=> ++k);
-const getUrl = Array.from({length:25}, (_, k)=> ++k);
-const getIdComments = Array.from({length:25}, (_, k)=> ++k);
-const getAvatar = Array.from({length:25}, (_, k)=> ++k);
-
-const createPost = () => ({
-  id: getId.shift(),
-  url: `img/photos/${getUrl.shift()}.jpg`,
-  description: DESCRIPTION[getRandomInteger(0, DESCRIPTION.length - 1)],
-  likes: getRandomInteger(0, 250),
-  comments: {
-    id: getIdComments.shift(),
-    avatar: `img/avatar-${getAvatar.shift()}.svg`,
-    message: MESSAGE[getRandomInteger(0, MESSAGE.length - 1)],
-    name: NAME[getRandomInteger(0, NAME.length - 1)],
-  },
-});
+const createPost = () => {
+  const id = idArray.shift();
+  const idComment = idCommentsArray.shift();
+  return {
+    id: id,
+    url: `img/photos/${id}.jpg`,
+    description: DESCRIPTION[getRandomInteger(0, DESCRIPTION.length - 1)],
+    likes: getRandomInteger(0, 250),
+    comments: [
+      {id: idComment, avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`, message: MESSAGE[getRandomInteger(0, MESSAGE.length - 1)], name: NAME[getRandomInteger(0, NAME.length - 1)]},
+      {id: idComment + 1, avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`, message: MESSAGE[getRandomInteger(0, MESSAGE.length - 1)], name: NAME[getRandomInteger(0, NAME.length - 1)]},
+      {id: idComment + 2, avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`, message: MESSAGE[getRandomInteger(0, MESSAGE.length - 1)], name: NAME[getRandomInteger(0, NAME.length - 1)]},
+    ],
+  };
+};
 
 const generatioObjects = Array.from({length: NUMBER_GENERATION_OBJECTS}, createPost);
-
 console.log(generatioObjects);

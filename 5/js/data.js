@@ -52,7 +52,7 @@ const createPost = () => {
   const id = idArray.shift();
   return {
     id: id,
-    url: `img/photos/${id}.jpg`,
+    url: `photos/${id}.jpg`,
     description: DESCRIPTION[getRandomInteger(0, DESCRIPTION.length - 1)],
     likes: getRandomInteger(0, 250),
     comments: generateComments(),

@@ -1,3 +1,4 @@
-import {generatioObjects} from './data.js';
+import {generateObjects} from './data.js';
+import './rendering-thumbnails.js';
 
-generatioObjects();
+generateObjects();

@@ -46,19 +46,19 @@ const createComment = () => {
   };
 };
 
-const generationComments = () => Array.from({length: NUMBER_GENERATION_COMMENTS}, createComment);
+const generateComments = () => Array.from({length: NUMBER_GENERATION_COMMENTS}, createComment);
 
 const createPost = () => {
   const id = idArray.shift();
   return {
     id: id,
-    url: `img/photos/${id}.jpg`,
+    url: `photos/${id}.jpg`,
     description: DESCRIPTION[getRandomInteger(0, DESCRIPTION.length - 1)],
     likes: getRandomInteger(0, 250),
-    comments: generationComments(),
+    comments: generateComments(),
   };
 };
 
-const generatioObjects = () => Array.from({length: NUMBER_GENERATION_OBJECTS}, createPost);
+const generateObjects = () => Array.from({length: NUMBER_GENERATION_OBJECTS}, createPost);
 
-export {generatioObjects};
+export {generateObjects};

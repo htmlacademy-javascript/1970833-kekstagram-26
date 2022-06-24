@@ -1,4 +1,4 @@
-import {getRandomInteger} from './util.js';
+import {getRandomInteger, getRandomArrayElement, createIdGenerator} from './util.js';
 
 const DESCRIPTION = [
   'описание фото раз',
@@ -32,33 +32,39 @@ const NAME = [
 ];
 
 const NUMBER_GENERATION_OBJECTS = 25;
-const NUMBER_GENERATION_COMMENTS = 4;
-const idArray = Array.from({length:25}, (_, k)=> ++k);
-const idCommentsArray = Array.from({length:150}, (_, k)=> ++k);
 
-const createComment = () => {
-  const idComment = idCommentsArray.shift();
-  return {
-    id: idComment,
-    avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
-    message: MESSAGE[getRandomInteger(0, MESSAGE.length - 1)],
-    name: NAME[getRandomInteger(0, NAME.length - 1)],
-  };
+const AVATAR = {
+  min: 1,
+  max: 6,
 };
 
-const generateComments = () => Array.from({length: NUMBER_GENERATION_COMMENTS}, createComment);
-
-const createPost = () => {
-  const id = idArray.shift();
-  return {
-    id: id,
-    url: `photos/${id}.jpg`,
-    description: DESCRIPTION[getRandomInteger(0, DESCRIPTION.length - 1)],
-    likes: getRandomInteger(0, 250),
-    comments: generateComments(),
-  };
+const LIKE = {
+  min: 15,
+  max: 200,
 };
 
-const generateObjects = () => Array.from({length: NUMBER_GENERATION_OBJECTS}, createPost);
+const COMMENT = {
+  min: 3,
+  max: 25,
+};
+
+const getIdComment = createIdGenerator(1, 100);
+
+const createComment = () => ({
+  id: getIdComment(),
+  avatar: `img/avatar-${getRandomInteger(AVATAR.min, AVATAR.max)}.svg`,
+  message: getRandomArrayElement(MESSAGE),
+  name: getRandomArrayElement(NAME),
+});
+
+const createPost = (id) => ({
+  id,
+  url: `photos/${id}.jpg`,
+  description: getRandomArrayElement(DESCRIPTION),
+  likes: getRandomInteger(LIKE.min, LIKE.max),
+  comments: Array.from({lenght: getRandomInteger(COMMENT.min, COMMENT.max)}, createComment),
+});
+
+const generateObjects = () => Array.from({length: NUMBER_GENERATION_OBJECTS}, (_, idNumber) => createPost(idNumber + 1));
 
 export {generateObjects};

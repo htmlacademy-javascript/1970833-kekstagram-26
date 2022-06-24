@@ -1,4 +1,4 @@
 import {generateObjects} from './data.js';
-import './rendering-thumbnails.js';
+import {renderPicture} from './rendering-thumbnails.js';
 
-generateObjects();
+renderPicture(generateObjects());

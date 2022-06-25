@@ -31,14 +31,20 @@ const renderFullPicture = ({url, description, likes, comments}) => {
     commentAvatarClone.src = avatar;
     commentAvatarClone.alt = name;
     commentClone.querySelector('.social__text').textContent = message;
-    // commentContainer.insertAdjacentHTML('afterbegin',
-    //   `<li class="social__comment">
-    //     <img class="social__picture" src=${avatar} alt=${name} width="35" height="35">
-    //     <p class="social__text">${message}</p>
-    //   </li>`);
     commentFragment.append(commentClone);
+    // const commentItem = document.createElement('li');
+    // commentItem.classList.add('social__comment');
+    // const commentItemImg = document.createElement('img');
+    // commentItemImg.classList.add('social__picture');
+    // commentItemImg.setAttribute('src', avatar);
+    // commentItemImg.setAttribute('alt', name);
+    // const commentItemText = document.createElement('p');
+    // commentItemText.classList.add('social__text');
+    // commentItemText.textContent = message;
+    // commentItem.append(commentItemImg);
+    // commentItem.append(commentItemText);
+    // commentFragment.append(commentItem);
   });
-  commentContainer.innerHTML = '';
   commentContainer.append(commentFragment);
 };
 

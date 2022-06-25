@@ -48,8 +48,7 @@ const COMMENT = {
   max: 25,
 };
 
-const getIdComment = createIdGenerator(1, 100);
-
+const getIdComment = createIdGenerator(1, 1000);
 const createComment = () => ({
   id: getIdComment(),
   avatar: `img/avatar-${getRandomInteger(AVATAR.min, AVATAR.max)}.svg`,
@@ -62,7 +61,7 @@ const createPost = (id) => ({
   url: `photos/${id}.jpg`,
   description: getRandomArrayElement(DESCRIPTION),
   likes: getRandomInteger(LIKE.min, LIKE.max),
-  comments: Array.from({lenght: getRandomInteger(COMMENT.min, COMMENT.max)}, createComment),
+  comments: Array.from({length: getRandomInteger(COMMENT.min, COMMENT.max)}, createComment),
 });
 
 const generateObjects = () => Array.from({length: NUMBER_GENERATION_OBJECTS}, (_, idNumber) => createPost(idNumber + 1));

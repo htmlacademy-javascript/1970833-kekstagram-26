@@ -1,3 +1,5 @@
+import {isEscapeKey} from './util.js';
+
 const body = document.querySelector('body');
 const pictureContainer = document.querySelector('.big-picture');
 
@@ -19,7 +21,9 @@ const renderFullPicture = ({url, description, likes, comments}) => {
   commentLoader.classList.add('hidden');
   body.classList.add('modal-open');
 
-  document.addEventListener('keydown', closePictureHandler);
+  document.addEventListener('keydown', () => {
+    onClosePictureHandler();
+  });
 
   pictureImg.src = url;
   pictureDescription.textContent = description;
@@ -32,34 +36,23 @@ const renderFullPicture = ({url, description, likes, comments}) => {
     commentAvatarClone.alt = name;
     commentClone.querySelector('.social__text').textContent = message;
     commentFragment.append(commentClone);
-    // const commentItem = document.createElement('li');
-    // commentItem.classList.add('social__comment');
-    // const commentItemImg = document.createElement('img');
-    // commentItemImg.classList.add('social__picture');
-    // commentItemImg.setAttribute('src', avatar);
-    // commentItemImg.setAttribute('alt', name);
-    // const commentItemText = document.createElement('p');
-    // commentItemText.classList.add('social__text');
-    // commentItemText.textContent = message;
-    // commentItem.append(commentItemImg);
-    // commentItem.append(commentItemText);
-    // commentFragment.append(commentItem);
   });
   commentContainer.append(commentFragment);
 };
 
-const closePicture = () => {
+const onClosePicture = () => {
   pictureContainer.classList.add('hidden');
   body.classList.remove('modal-open');
-  document.removeEventListener('keydown', closePictureHandler);
+  document.removeEventListener('keydown', onClosePictureHandler);
 };
 
-function closePictureHandler(event) {
-  if (event.key === 'Escape') {
-    closePicture();
+function onClosePictureHandler(evt) {
+  if (isEscapeKey(evt)) {
+    evt.preventDefault();
+    onClosePicture();
   }
 }
 
-pictureCloseButton.addEventListener('click', closePicture);
+pictureCloseButton.addEventListener('click', onClosePicture);
 
 export {renderFullPicture};

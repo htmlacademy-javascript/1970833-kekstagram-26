@@ -16,67 +16,90 @@ const pristine = new Pristine(uploadForm, {
 });
 const re = /^#[A-Za-zА-яа-яЁё0-9]{1,19}$/;
 
-const onPopupEscKeydown = (evt) => {
-  if (isEscapeKey(evt)
-    && document.activeElement !== textHashtags
-    && document.activeElement !== textComment) {
-    evt.preventDefault();
+const initFromHandler = () => {
+  const onPopupEscKeydown = (evt) => {
+    if (isEscapeKey(evt)
+      && document.activeElement !== textHashtags
+      && document.activeElement !== textComment) {
+      evt.preventDefault();
+      closelImgUpload();
+    }
+  };
+
+  // открытие формы редактирования изображения
+  const openUploadFile = () => {
+    imgUpload.classList.remove('hidden');
+    body.classList.add('modal-open');
+    document.addEventListener('keydown', onPopupEscKeydown);
+  };
+
+  uploadFile.addEventListener('change', () => {
+    openUploadFile();
+  });
+
+  // закрытие формы редактирования изображения
+  function closelImgUpload() {
+    imgUpload.classList.add('hidden');
+    body.classList.remove('modal-open');
+    document.removeEventListener('keydown', onPopupEscKeydown);
+    uploadFile.value = '';
+    textHashtags.value = '';
+    textComment.value = '';
+  }
+
+  buttonCancelUpload.addEventListener('click', () => {
     closelImgUpload();
-  }
-};
+  });
 
-// открытие формы редактирования изображения
-const openUploadFile = () => {
-  imgUpload.classList.remove('hidden');
-  body.classList.add('modal-open');
-  document.addEventListener('keydown', onPopupEscKeydown);
-};
+  // валидация формы добавления изображения (строка хэш-теги)
+  const validateTextHashtags = (text) => {
+    if (text === '') {
+      return true;
+    }
 
-uploadFile.addEventListener('change', () => {
-  openUploadFile();
-});
+    const hashtagsArr = text.toLowerCase().trim().split(' ');
+    return hashtagsArr.every((hashtag) => re.test(hashtag));
+  };
 
-// закрытие формы редактирования изображения
-function closelImgUpload() {
-  imgUpload.classList.add('hidden');
-  body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onPopupEscKeydown);
-  uploadFile.value = '';
-  textHashtags.value = '';
-  textComment.value = '';
-}
+  pristine.addValidator(textHashtags, validateTextHashtags, 'Хэш-тэг начинается со знака "#". Содержит только буквы и цифры, не содержит пробелы. Количество символов: min=2, max=20, включая "#"');
 
-buttonCancelUpload.addEventListener('click', () => {
-  closelImgUpload();
-});
+  const validateQuantityHashtags = (text) => {
+    if (text === '') {
+      return true;
+    }
 
-// валидация формы добавления изображения (хэш-теги и комментарии)
-const validateTextHashtags = (text) => {
-  if (text === '') {
+    const hashtagsArr = text.toLowerCase().trim().split(' ');
+    if (hashtagsArr.length > MAX_HASHTAGS) {
+      return false;
+    }
     return true;
-  }
+  };
 
-  const hashtagsArr = text.toLowerCase().trim().split(' ');
+  pristine.addValidator(textHashtags, validateQuantityHashtags, 'Не более 5 хэш-тэгов');
 
-  if (hashtagsArr.length > MAX_HASHTAGS) {
-    return false;
-  }
+  const validateRepeatHashtags = (text) => {
+    if (text === '') {
+      return true;
+    }
 
-  if (new Set(hashtagsArr).size !== hashtagsArr.length) {
-    return false;
-  }
+    const hashtagsArr = text.toLowerCase().trim().split(' ');
+    if (new Set(hashtagsArr).size !== hashtagsArr.length) {
+      return false;
+    }
+    return true;
+  };
 
-  return hashtagsArr.every((hashtag) => re.test(hashtag));
+  pristine.addValidator(textHashtags, validateRepeatHashtags, 'Хэш-тэги не должны повторяться');
+
+  // отправка формы
+  uploadForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    const isValid = pristine.validate();
+    if (isValid) {
+      uploadForm.submit();
+    }
+  });
 };
 
-pristine.addValidator(textHashtags, validateTextHashtags, 'Неправильно введён хэш-тэг');
-
-// отправка формы
-uploadForm.addEventListener('submit', (evt) => {
-  evt.preventDefault();
-
-  const isValid = pristine.validate();
-  if (isValid) {
-    uploadForm.submit();
-  }
-});
+export {initFromHandler};

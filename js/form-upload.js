@@ -1,4 +1,5 @@
 import {isEscapeKey} from './util.js';
+import {effectDefault} from './image-editing.js';
 
 const body = document.querySelector('body');
 const uploadFile = document.querySelector('#upload-file');
@@ -8,6 +9,8 @@ const uploadForm = document.querySelector('#upload-select-image');
 const textHashtags = imgUpload.querySelector('.text__hashtags');
 const textComment = imgUpload.querySelector('.text__description');
 const MAX_HASHTAGS = 5;
+
+const scaleControlImage = document.querySelector('.scale__control--value');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -31,6 +34,8 @@ const initFromHandler = () => {
     imgUpload.classList.remove('hidden');
     body.classList.add('modal-open');
     document.addEventListener('keydown', onPopupEscKeydown);
+    scaleControlImage.value = '100%';
+    effectDefault();
   };
 
   uploadFile.addEventListener('change', () => {

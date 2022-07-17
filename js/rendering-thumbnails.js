@@ -1,4 +1,4 @@
-import {renderFullPicture} from './full-picture.js';
+import {renderFullPicture} from './image-full.js';
 
 const renderPicture = (pictures) => {
   const pictureList = document.querySelector('.pictures');
@@ -15,6 +15,10 @@ const renderPicture = (pictures) => {
     pictureClone.querySelector('.picture__comments').textContent = comments.length;
     pictureFragment.append(pictureClone);
   });
+
+  // убираются раннее отрисованные фотографии
+  pictureList.querySelectorAll('.picture').forEach((picture) => picture.remove());
+
   pictureList.append(pictureFragment);
 };
 

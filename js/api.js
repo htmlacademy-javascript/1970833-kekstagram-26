@@ -11,6 +11,11 @@ const getData = async (onSuccess, onFail) => {
 
     const offers = await response.json();
     onSuccess(offers);
+
+    // после завершения загрузки изображений с сервера появятся кнопки переключения фильтров
+    const filterConteiner = document.querySelector('.img-filters');
+    filterConteiner.classList.remove('img-filters--inactive');
+
   } catch (error) {
     onFail(error.message);
   }

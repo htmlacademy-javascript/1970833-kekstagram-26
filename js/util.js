@@ -61,4 +61,32 @@ const showAlert = (message) => {
   }, ALERT_SHOW_TIME);
 };
 
-export {getRandomInteger, stringLength, getRandomArrayElement, createIdGenerator, isEscapeKey, isEnterKey, showAlert};
+// Функция взята из интернета и доработана
+// Источник - https://www.freecodecamp.org/news/javascript-debounce-example
+
+function debounce (callback, timeoutDelay = 500) {
+  let timeoutId;
+
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
+  };
+}
+
+// функция перемешивания массива
+// источник - https://www.w3docs.com/snippets/javascript/how-to-randomize-shuffle-a-javascript-array.html
+
+function shuffleArray(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// функция сортировки по убыванию
+const compareImage = (imageA, imageB) => (
+  imageB.comments.length - imageA.comments.length
+);
+
+export {getRandomInteger, stringLength, getRandomArrayElement, createIdGenerator, isEscapeKey, isEnterKey, showAlert, debounce, shuffleArray, compareImage};

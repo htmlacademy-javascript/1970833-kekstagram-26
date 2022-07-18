@@ -5,15 +5,6 @@ const getRandomInteger = (min, max) => {
   }
 };
 
-// проверка максимальной длины строки
-const maxLengthComment = 140;
-
-const stringLength = (string) => {
-  if (typeof string === 'string') {
-    return string.length <= maxLengthComment;
-  }
-};
-
 // cлучайный элемент массива
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
@@ -89,4 +80,4 @@ const compareImage = (imageA, imageB) => (
   imageB.comments.length - imageA.comments.length
 );
 
-export {getRandomInteger, stringLength, getRandomArrayElement, createIdGenerator, isEscapeKey, isEnterKey, showAlert, debounce, shuffleArray, compareImage};
+export {getRandomInteger, getRandomArrayElement, createIdGenerator, isEscapeKey, isEnterKey, showAlert, debounce, shuffleArray, compareImage};

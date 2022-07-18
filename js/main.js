@@ -4,6 +4,7 @@ import {imageEditing} from './image-editing.js';
 import {getData} from './api.js';
 import {showAlert, debounce, shuffleArray} from './util.js';
 import {compareImage, setFilterButtonDefault, setFilterButtonRandom, setFilterButtonDiscussed} from './image-filters.js';
+import {showImageUploadUser} from './image-upload-user.js';
 
 
 const RERENDER_DELAY = 500;
@@ -20,9 +21,10 @@ getData((images) => {
 
   setFilterButtonDiscussed(debounce(
     () => renderPicture(images.slice().sort(compareImage)), RERENDER_DELAY));
-},
-showAlert);
+}, showAlert);
 
 setFormUpload();
 
 imageEditing();
+
+showImageUploadUser();

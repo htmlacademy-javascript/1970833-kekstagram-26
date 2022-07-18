@@ -1,4 +1,4 @@
-import {renderFullPicture} from './image-full.js';
+import {renderFullPicture} from './image-render-full-size.js';
 
 const renderPicture = (pictures) => {
   const pictureList = document.querySelector('.pictures');

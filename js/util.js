@@ -6,7 +6,7 @@ const getRandomInteger = (min, max) => {
 };
 
 // cлучайный элемент массива
-const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
+const getRandomArrayContainer = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
 // генератор id комментариев
 const createIdGenerator = (min, max) => {
@@ -24,9 +24,6 @@ const createIdGenerator = (min, max) => {
 
 // проверка нажатия клавиши Escape
 const isEscapeKey = (evt) => evt.key === 'Escape';
-
-// проверка нажатия клавиши Enter
-const isEnterKey = (evt) => evt.key === 'Enter';
 
 // показ ошибки в случае проблем при взаимодействии с сервером
 const ALERT_SHOW_TIME = 5000;
@@ -80,4 +77,4 @@ const compareImage = (imageA, imageB) => (
   imageB.comments.length - imageA.comments.length
 );
 
-export {getRandomInteger, getRandomArrayElement, createIdGenerator, isEscapeKey, isEnterKey, showAlert, debounce, shuffleArray, compareImage};
+export {getRandomInteger, getRandomArrayContainer, createIdGenerator, isEscapeKey, showAlert, debounce, shuffleArray, compareImage};

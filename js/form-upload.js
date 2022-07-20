@@ -1,5 +1,5 @@
 import {isEscapeKey} from './util.js';
-import {effectDefault} from './image-editing.js';
+import {chooseEffectDefault} from './image-editing.js';
 import {sendData} from './api.js';
 
 const body = document.querySelector('body');
@@ -12,6 +12,7 @@ const textComment = imgUpload.querySelector('.text__description');
 const MAX_HASHTAGS = 5;
 
 const scaleControlImage = document.querySelector('.scale__control--value');
+const previewImage = document.querySelector('.img-upload__preview');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -42,8 +43,9 @@ const openUploadFile = () => {
   imgUpload.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPopupEscKeydown);
+  previewImage.style.transform = '';
   scaleControlImage.value = '100%';
-  effectDefault();
+  chooseEffectDefault();
 };
 
 uploadFile.addEventListener('change', openUploadFile);
@@ -114,14 +116,14 @@ const unblockSubmitButton = () => {
 };
 
 // закрытие окна об успешной отправке
-const onClosePopupSuccess = (evt) => {
+const onPopupSuccessClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeSuccessPopup();
   }
 };
 
-const successContainerClick = (evt) => {
+const onSuccessContainerClick = (evt) => {
   if (evt.target === successContainer) {
     closeSuccessPopup();
   }
@@ -131,32 +133,32 @@ successButton.addEventListener('click', () => closeSuccessPopup());
 
 function closeSuccessPopup () {
   successContainer.remove();
-  document.addEventListener('click', successContainerClick);
-  document.addEventListener('keydown', onClosePopupSuccess);
+  document.removeEventListener('click', onSuccessContainerClick);
+  document.removeEventListener('keydown', onPopupSuccessClose);
 }
 
 // открытие окна об успешной отправке
 const showSuccessPopup = () => {
   body.append(successContainer);
-  document.addEventListener('click', successContainerClick);
-  document.addEventListener('keydown', onClosePopupSuccess);
+  document.addEventListener('click', onSuccessContainerClick);
+  document.addEventListener('keydown', onPopupSuccessClose);
 };
 
-const onSuccessSendForm = () => {
+const onSuccessFormSend = () => {
   closelImgUpload();
   showSuccessPopup();
   unblockSubmitButton();
 };
 
 // закрытие окна об ошибке
-const onClosePopupError = (evt) => {
+const onPopupErrorClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeErrorPopup();
   }
 };
 
-const errorContainerClick = (evt) => {
+const onErrorContainerClick = (evt) => {
   if (evt.target === errorContainer) {
     closeErrorPopup();
   }
@@ -166,21 +168,31 @@ errorButton.addEventListener('click', () => closeErrorPopup());
 
 function closeErrorPopup () {
   errorContainer.remove();
-  document.removeEventListener('click', errorContainerClick);
-  document.removeEventListener('keydown', onClosePopupError);
+  document.removeEventListener('click', onErrorContainerClick);
+  document.removeEventListener('keydown', onPopupErrorClose);
 }
 
 // открытие окна об ошибке
 const showErrorPopup = () => {
   body.append(errorContainer);
-  document.addEventListener('click', errorContainerClick);
-  document.addEventListener('keydown', onClosePopupError);
+  document.addEventListener('click', onErrorContainerClick);
+  document.addEventListener('keydown', onPopupErrorClose);
 };
 
-const onErrorSendForm = () => {
+const onErrorFormSend = () => {
   showErrorPopup();
   unblockSubmitButton();
 };
+
+// отменяет обработчик Esc при фокусе
+const canсelsHandlerFocusInEscapeKey = (evt) => {
+  if (isEscapeKey(evt)) {
+    evt.stopPropagation();
+  }
+};
+
+textHashtags.addEventListener('keydown', canсelsHandlerFocusInEscapeKey);
+textComment.addEventListener('keydown', canсelsHandlerFocusInEscapeKey);
 
 // отправка формы
 const setFormUpload = () => {
@@ -190,7 +202,7 @@ const setFormUpload = () => {
     const isValid = pristine.validate();
     if (isValid) {
       blockSubmitButton();
-      sendData(onSuccessSendForm, onErrorSendForm, new FormData(evt.target));
+      sendData(onSuccessFormSend, onErrorFormSend, new FormData(evt.target));
     }
   });
 };

@@ -5,14 +5,14 @@ const decrementScaleImage = document.querySelector('.scale__control--smaller');
 const incrementScaleImage = document.querySelector('.scale__control--bigger');
 
 const sliderEffectLevel = document.querySelector('.img-upload__effect-level');
-const sliderElement = document.querySelector('.effect-level__slider');
-const effectValueElement = document.querySelector('.effect-level__value');
+const sliderContainer = document.querySelector('.effect-level__slider');
+const effectValueContainer = document.querySelector('.effect-level__value');
 const effectsList = document.querySelector('.effects__list');
 
 const IMAGE_SCALE = {
-  minScale: 25,
-  maxScale: 100,
-  stepScale: 25,
+  MIN: 25,
+  MAX: 100,
+  STEP: 25,
 };
 
 const SETTINGS_EFFECTS = {
@@ -54,7 +54,7 @@ const SETTINGS_EFFECTS = {
 };
 
 // выбор эффекта по умолчанию «Оригинал» (скрытие слайдера и эффектов)
-const effectDefault = () => {
+const chooseEffectDefault = () => {
   sliderEffectLevel.classList.add('hidden');
   previewImage.className = 'img-upload__preview';
   previewImage.style.filter = '';
@@ -66,12 +66,12 @@ const imageEditing = () => {
   const imageScaleChange = (evt) => {
     let imageScaleValue = +scaleControlImage.value.slice(0, -1); // преобразования к числу в явном виде + возврат нового массива
     if (evt) {
-      if (imageScaleValue < IMAGE_SCALE.maxScale) {
-        imageScaleValue += IMAGE_SCALE.stepScale;
+      if (imageScaleValue < IMAGE_SCALE.MAX) {
+        imageScaleValue += IMAGE_SCALE.STEP;
       }
     } else {
-      if (imageScaleValue > IMAGE_SCALE.minScale) {
-        imageScaleValue -= IMAGE_SCALE.stepScale;
+      if (imageScaleValue > IMAGE_SCALE.MIN) {
+        imageScaleValue -= IMAGE_SCALE.STEP;
       }
     }
 
@@ -79,13 +79,13 @@ const imageEditing = () => {
     previewImage.style.transform = `scale(${imageScaleValue / 100})`;
   };
 
-  const onIncrementButton = () => imageScaleChange(true);
-  const decrementButton = () => imageScaleChange(false);
-  incrementScaleImage.addEventListener('click', onIncrementButton);
-  decrementScaleImage.addEventListener('click', decrementButton);
+  const onIncrementButtonClick = () => imageScaleChange(true);
+  const onDecrementButtonClick = () => imageScaleChange(false);
+  incrementScaleImage.addEventListener('click', onIncrementButtonClick);
+  decrementScaleImage.addEventListener('click', onDecrementButtonClick);
 
   // слайдер изменения уровня эффекта
-  noUiSlider.create(sliderElement, {
+  noUiSlider.create(sliderContainer, {
     range: {
       min: 0,
       max: 1,
@@ -96,9 +96,9 @@ const imageEditing = () => {
   });
 
   // переключение эффектов
-  const effectChange = (evt) => {
+  const onEffectChange = (evt) => {
     if (evt.target.value === 'none') {
-      effectDefault();
+      chooseEffectDefault();
     } else {
       sliderEffectLevel.classList.remove('hidden');
       previewImage.classList.add(`effects__preview--${evt.target.value}`);
@@ -106,7 +106,7 @@ const imageEditing = () => {
       const arrayEffects = SETTINGS_EFFECTS[evt.target.value];
       const {minEffectSlider, maxEffectSlider, stepSlider} = arrayEffects;
 
-      sliderElement.noUiSlider.updateOptions({
+      sliderContainer.noUiSlider.updateOptions({
         range: {
           min: minEffectSlider,
           max: maxEffectSlider,
@@ -114,17 +114,17 @@ const imageEditing = () => {
         step: stepSlider,
         start: maxEffectSlider,
       });
-      sliderElement.noUiSlider.set(maxEffectSlider);
+      sliderContainer.noUiSlider.set(maxEffectSlider);
     }
   };
-  effectsList.addEventListener('change', effectChange);
+  effectsList.addEventListener('change', onEffectChange);
 
   // интенсивность эффектов
-  sliderElement.noUiSlider.on('update', () => {
-    const sliderValue = sliderElement.noUiSlider.get();
+  sliderContainer.noUiSlider.on('update', () => {
+    const sliderValue = sliderContainer.noUiSlider.get();
     const arrayEffects = SETTINGS_EFFECTS[document.querySelector('input[name="effect"]:checked').value];
 
-    effectValueElement.value = sliderValue;
+    effectValueContainer.value = sliderValue;
 
     if (arrayEffects !== undefined) {
       const {filter, unit} = arrayEffects;
@@ -133,4 +133,4 @@ const imageEditing = () => {
   });
 };
 
-export {imageEditing, effectDefault};
+export {imageEditing, chooseEffectDefault};

@@ -18,21 +18,21 @@ const QUANTITY_ADD_COMMENTS = 5;
 const commentFragment = document.createDocumentFragment();
 
 // закрытие полноэкранного изображения
-const onClosePictureHandler = (evt) => {
+const onFullPictureClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    onClosePicture();
+    closePicture();
   }
 };
 
-function onClosePicture () {
+function closePicture () {
   pictureContainer.classList.add('hidden');
   body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onClosePictureHandler);
+  document.removeEventListener('keydown', onFullPictureClose);
 }
 
 pictureCloseButton.addEventListener('click', () => {
-  onClosePicture();
+  closePicture();
 });
 
 // отображение одного комментария
@@ -81,7 +81,7 @@ const renderFullPicture = ({url, description, likes, comments}) => {
 
   renderComments(comments, countAddComments);
 
-  document.addEventListener('keydown', onClosePictureHandler);
+  document.addEventListener('keydown', onFullPictureClose);
   bottonLoadComments.addEventListener('click', () => {
     countAddComments++;
     renderComments(comments, countAddComments);

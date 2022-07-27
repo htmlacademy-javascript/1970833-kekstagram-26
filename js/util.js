@@ -1,27 +1,3 @@
-// cлучайное целое число от min до max включительно
-const getRandomInteger = (min, max) => {
-  if (min < max && min >= 0 && max > 0) {
-    return Math.floor(Math.random() * (max + 1 - min) + min);
-  }
-};
-
-// cлучайный элемент массива
-const getRandomArrayContainer = (elements) => elements[getRandomInteger(0, elements.length - 1)];
-
-// генератор id комментариев
-const createIdGenerator = (min, max) => {
-  const commentsId = [];
-  return () => {
-    let commentId;
-    do {
-      commentId = getRandomInteger(min, max);
-    }
-    while (commentsId.includes(commentId));
-    commentsId.push(commentId);
-    return commentId;
-  };
-};
-
 // проверка нажатия клавиши Escape
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
@@ -52,29 +28,29 @@ const showAlert = (message) => {
 // Функция взята из интернета и доработана
 // Источник - https://www.freecodecamp.org/news/javascript-debounce-example
 
-function debounce (callback, timeoutDelay = 500) {
+const debounce = (callback, timeoutDelay) => {
   let timeoutId;
 
   return (...rest) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => callback.apply(this, rest), timeoutDelay);
   };
-}
+};
 
 // функция перемешивания массива
 // источник - https://www.w3docs.com/snippets/javascript/how-to-randomize-shuffle-a-javascript-array.html
 
-function shuffleArray(arr) {
+const shuffleArray = (arr) => {
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   return arr;
-}
+};
 
 // функция сортировки по убыванию
 const compareImage = (imageA, imageB) => (
   imageB.comments.length - imageA.comments.length
 );
 
-export {getRandomInteger, getRandomArrayContainer, createIdGenerator, isEscapeKey, showAlert, debounce, shuffleArray, compareImage};
+export {isEscapeKey, showAlert, debounce, shuffleArray, compareImage};

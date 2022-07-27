@@ -1,5 +1,7 @@
 import {isEscapeKey} from './util.js';
 
+const QUANTITY_ADD_COMMENTS = 5;
+
 const body = document.querySelector('body');
 const pictureContainer = document.querySelector('.big-picture');
 
@@ -13,12 +15,10 @@ const commentContainer = pictureContainer.querySelector('.social__comments');
 const commentItem = pictureContainer.querySelector('.social__comment');
 const bottonLoadComments = pictureContainer.querySelector('.social__comments-loader');
 
-const QUANTITY_ADD_COMMENTS = 5;
-
 const commentFragment = document.createDocumentFragment();
 
 // закрытие полноэкранного изображения
-const onFullPictureClose = (evt) => {
+const closeFullPicture = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closePicture();
@@ -28,12 +28,9 @@ const onFullPictureClose = (evt) => {
 function closePicture () {
   pictureContainer.classList.add('hidden');
   body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onFullPictureClose);
+  document.removeEventListener('keydown', closeFullPicture);
+  pictureCloseButton.removeEventListener('click', () => closePicture());
 }
-
-pictureCloseButton.addEventListener('click', () => {
-  closePicture();
-});
 
 // отображение одного комментария
 const renderComment = (({avatar, message, name}) => {
@@ -59,6 +56,10 @@ const renderComments = (comments, countAddComments) => {
 
   if (countAllComments <= countLoadComments) {
     bottonLoadComments.classList.add('hidden');
+    bottonLoadComments.removeEventListener('click', () => {
+      countAddComments++;
+      renderComments(comments, countAddComments);
+    });
   } else {
     commentCount.classList.remove('hidden');
   }
@@ -80,8 +81,8 @@ const renderFullPicture = ({url, description, likes, comments}) => {
   pictureLikesCount.textContent = likes;
 
   renderComments(comments, countAddComments);
-
-  document.addEventListener('keydown', onFullPictureClose);
+  pictureCloseButton.addEventListener('click', () => closePicture());
+  document.addEventListener('keydown', closeFullPicture);
   bottonLoadComments.addEventListener('click', () => {
     countAddComments++;
     renderComments(comments, countAddComments);

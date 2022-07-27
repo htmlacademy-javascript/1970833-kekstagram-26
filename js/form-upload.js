@@ -2,6 +2,8 @@ import {isEscapeKey} from './util.js';
 import {chooseEffectDefault} from './image-editing.js';
 import {sendData} from './api.js';
 
+const MAX_HASHTAGS = 5;
+
 const body = document.querySelector('body');
 const uploadFile = document.querySelector('#upload-file');
 const buttonCancelUpload = document.querySelector('#upload-cancel');
@@ -9,7 +11,6 @@ const imgUpload = document.querySelector('.img-upload__overlay');
 const uploadForm = document.querySelector('#upload-select-image');
 const textHashtags = imgUpload.querySelector('.text__hashtags');
 const textComment = imgUpload.querySelector('.text__description');
-const MAX_HASHTAGS = 5;
 
 const scaleControlImage = document.querySelector('.scale__control--value');
 const previewImage = document.querySelector('.img-upload__preview');
@@ -30,8 +31,7 @@ const errorButton = errorContainer.querySelector('.error__button');
 
 const submitButton = document.querySelector('#upload-submit');
 
-
-const onPopupEscKeydown = (evt) => {
+const getPopupEscKeydown = (evt) => {
   if (isEscapeKey(evt) && !body.contains(errorContainer)) {
     evt.preventDefault();
     closelImgUpload();
@@ -42,7 +42,7 @@ const onPopupEscKeydown = (evt) => {
 const openUploadFile = () => {
   imgUpload.classList.remove('hidden');
   body.classList.add('modal-open');
-  document.addEventListener('keydown', onPopupEscKeydown);
+  document.addEventListener('keydown', getPopupEscKeydown);
   previewImage.style.transform = '';
   scaleControlImage.value = '100%';
   chooseEffectDefault();
@@ -54,10 +54,12 @@ uploadFile.addEventListener('change', openUploadFile);
 function closelImgUpload() {
   imgUpload.classList.add('hidden');
   body.classList.remove('modal-open');
-  document.removeEventListener('keydown', onPopupEscKeydown);
+  document.removeEventListener('keydown', getPopupEscKeydown);
   uploadFile.value = '';
   textHashtags.value = '';
   textComment.value = '';
+  pristine.validate();
+  uploadForm.reset();
 }
 
 buttonCancelUpload.addEventListener('click', () => {
@@ -82,10 +84,7 @@ const validateQuantityHashtags = (text) => {
   }
 
   const hashtagsArr = text.toLowerCase().trim().split(' ');
-  if (hashtagsArr.length > MAX_HASHTAGS) {
-    return false;
-  }
-  return true;
+  return hashtagsArr.length <= MAX_HASHTAGS;
 };
 
 pristine.addValidator(textHashtags, validateQuantityHashtags, 'Не более 5 хэш-тэгов');
@@ -96,10 +95,7 @@ const validateRepeatHashtags = (text) => {
   }
 
   const hashtagsArr = text.toLowerCase().trim().split(' ');
-  if (new Set(hashtagsArr).size !== hashtagsArr.length) {
-    return false;
-  }
-  return true;
+  return new Set(hashtagsArr).size === hashtagsArr.length;
 };
 
 pristine.addValidator(textHashtags, validateRepeatHashtags, 'Хэш-тэги не должны повторяться');
@@ -116,32 +112,32 @@ const unblockSubmitButton = () => {
 };
 
 // закрытие окна об успешной отправке
-const onPopupSuccessClose = (evt) => {
+const getPopupSuccessClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeSuccessPopup();
   }
 };
 
-const onSuccessContainerClick = (evt) => {
+const getSuccessContainerClick = (evt) => {
   if (evt.target === successContainer) {
     closeSuccessPopup();
   }
 };
 
-successButton.addEventListener('click', () => closeSuccessPopup());
-
 function closeSuccessPopup () {
   successContainer.remove();
-  document.removeEventListener('click', onSuccessContainerClick);
-  document.removeEventListener('keydown', onPopupSuccessClose);
+  document.removeEventListener('click', getSuccessContainerClick);
+  document.removeEventListener('keydown', getPopupSuccessClose);
+  successButton.addEventListener('click', () => closeSuccessPopup());
 }
 
 // открытие окна об успешной отправке
 const showSuccessPopup = () => {
   body.append(successContainer);
-  document.addEventListener('click', onSuccessContainerClick);
-  document.addEventListener('keydown', onPopupSuccessClose);
+  document.addEventListener('click', getSuccessContainerClick);
+  document.addEventListener('keydown', getPopupSuccessClose);
+  successButton.addEventListener('click', () => closeSuccessPopup());
 };
 
 const onSuccessFormSend = () => {
@@ -151,32 +147,32 @@ const onSuccessFormSend = () => {
 };
 
 // закрытие окна об ошибке
-const onPopupErrorClose = (evt) => {
+const getPopupErrorClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeErrorPopup();
   }
 };
 
-const onErrorContainerClick = (evt) => {
+const getErrorContainerClick = (evt) => {
   if (evt.target === errorContainer) {
     closeErrorPopup();
   }
 };
 
-errorButton.addEventListener('click', () => closeErrorPopup());
-
 function closeErrorPopup () {
   errorContainer.remove();
-  document.removeEventListener('click', onErrorContainerClick);
-  document.removeEventListener('keydown', onPopupErrorClose);
+  document.removeEventListener('click', getErrorContainerClick);
+  document.removeEventListener('keydown', getPopupErrorClose);
+  errorButton.removeEventListener('click', () => closeErrorPopup());
 }
 
 // открытие окна об ошибке
 const showErrorPopup = () => {
   body.append(errorContainer);
-  document.addEventListener('click', onErrorContainerClick);
-  document.addEventListener('keydown', onPopupErrorClose);
+  document.addEventListener('click', getErrorContainerClick);
+  document.addEventListener('keydown', getPopupErrorClose);
+  errorButton.addEventListener('click', () => closeErrorPopup());
 };
 
 const onErrorFormSend = () => {

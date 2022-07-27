@@ -1,14 +1,3 @@
-const previewImage = document.querySelector('.img-upload__preview');
-
-const scaleControlImage = document.querySelector('.scale__control--value');
-const decrementScaleImage = document.querySelector('.scale__control--smaller');
-const incrementScaleImage = document.querySelector('.scale__control--bigger');
-
-const sliderEffectLevel = document.querySelector('.img-upload__effect-level');
-const sliderContainer = document.querySelector('.effect-level__slider');
-const effectValueContainer = document.querySelector('.effect-level__value');
-const effectsList = document.querySelector('.effects__list');
-
 const IMAGE_SCALE = {
   MIN: 25,
   MAX: 100,
@@ -53,6 +42,17 @@ const SETTINGS_EFFECTS = {
   },
 };
 
+const previewImage = document.querySelector('.img-upload__preview img');
+
+const scaleControlImage = document.querySelector('.scale__control--value');
+const decrementScaleImage = document.querySelector('.scale__control--smaller');
+const incrementScaleImage = document.querySelector('.scale__control--bigger');
+
+const sliderEffectLevel = document.querySelector('.img-upload__effect-level');
+const sliderContainer = document.querySelector('.effect-level__slider');
+const effectValueContainer = document.querySelector('.effect-level__value');
+const effectsList = document.querySelector('.effects__list');
+
 // выбор эффекта по умолчанию «Оригинал» (скрытие слайдера и эффектов)
 const chooseEffectDefault = () => {
   sliderEffectLevel.classList.add('hidden');
@@ -79,10 +79,10 @@ const imageEditing = () => {
     previewImage.style.transform = `scale(${imageScaleValue / 100})`;
   };
 
-  const onIncrementButtonClick = () => imageScaleChange(true);
-  const onDecrementButtonClick = () => imageScaleChange(false);
-  incrementScaleImage.addEventListener('click', onIncrementButtonClick);
-  decrementScaleImage.addEventListener('click', onDecrementButtonClick);
+  const clickIncrementButton = () => imageScaleChange(true);
+  const clickDecrementButton = () => imageScaleChange(false);
+  incrementScaleImage.addEventListener('click', clickIncrementButton);
+  decrementScaleImage.addEventListener('click', clickDecrementButton);
 
   // слайдер изменения уровня эффекта
   noUiSlider.create(sliderContainer, {
@@ -96,7 +96,7 @@ const imageEditing = () => {
   });
 
   // переключение эффектов
-  const onEffectChange = (evt) => {
+  const changeEffect = (evt) => {
     if (evt.target.value === 'none') {
       chooseEffectDefault();
     } else {
@@ -117,7 +117,7 @@ const imageEditing = () => {
       sliderContainer.noUiSlider.set(maxEffectSlider);
     }
   };
-  effectsList.addEventListener('change', onEffectChange);
+  effectsList.addEventListener('change', changeEffect);
 
   // интенсивность эффектов
   sliderContainer.noUiSlider.on('update', () => {

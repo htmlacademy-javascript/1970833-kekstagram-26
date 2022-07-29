@@ -1,5 +1,7 @@
 // проверка нажатия клавиши Escape
-const isEscapeKey = (evt) => evt.key === 'Escape';
+const KEY_ESC = 'Escape';
+
+const isEscapeKey = (evt) => evt.key === KEY_ESC;
 
 // показ ошибки в случае проблем при взаимодействии с сервером
 const ALERT_SHOW_TIME = 5000;

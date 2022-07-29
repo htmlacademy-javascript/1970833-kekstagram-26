@@ -42,6 +42,8 @@ const SETTINGS_EFFECTS = {
   },
 };
 
+const VALUE_NONE = 'none';
+
 const previewImage = document.querySelector('.img-upload__preview img');
 
 const scaleControlImage = document.querySelector('.scale__control--value');
@@ -97,7 +99,7 @@ const imageEditing = () => {
 
   // переключение эффектов
   const changeEffect = (evt) => {
-    if (evt.target.value === 'none') {
+    if (evt.target.value === VALUE_NONE) {
       chooseEffectDefault();
     } else {
       sliderEffectLevel.classList.remove('hidden');

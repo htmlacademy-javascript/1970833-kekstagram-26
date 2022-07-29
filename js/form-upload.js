@@ -3,6 +3,8 @@ import {chooseEffectDefault} from './image-editing.js';
 import {sendData} from './api.js';
 
 const MAX_HASHTAGS = 5;
+const SCALE_VALUE_DEFAULT = 100;
+const SCALE_DEFAULT = 1;
 
 const body = document.querySelector('body');
 const uploadFile = document.querySelector('#upload-file');
@@ -13,7 +15,7 @@ const textHashtags = imgUpload.querySelector('.text__hashtags');
 const textComment = imgUpload.querySelector('.text__description');
 
 const scaleControlImage = document.querySelector('.scale__control--value');
-const previewImage = document.querySelector('.img-upload__preview');
+const previewImage = document.querySelector('.img-upload__preview img');
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -43,8 +45,8 @@ const openUploadFile = () => {
   imgUpload.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', getPopupEscKeydown);
-  previewImage.style.transform = '';
-  scaleControlImage.value = '100%';
+  previewImage.style.transform = `scale(${SCALE_DEFAULT})`;
+  scaleControlImage.value = `${SCALE_VALUE_DEFAULT}%`;
   chooseEffectDefault();
 };
 
@@ -147,7 +149,7 @@ const onSuccessFormSend = () => {
 };
 
 // закрытие окна об ошибке
-const getPopupErrorClose = (evt) => {
+const onPopupErrorClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeErrorPopup();
@@ -163,7 +165,7 @@ const getErrorContainerClick = (evt) => {
 function closeErrorPopup () {
   errorContainer.remove();
   document.removeEventListener('click', getErrorContainerClick);
-  document.removeEventListener('keydown', getPopupErrorClose);
+  document.removeEventListener('keydown', onPopupErrorClose);
   errorButton.removeEventListener('click', () => closeErrorPopup());
 }
 
@@ -171,7 +173,7 @@ function closeErrorPopup () {
 const showErrorPopup = () => {
   body.append(errorContainer);
   document.addEventListener('click', getErrorContainerClick);
-  document.addEventListener('keydown', getPopupErrorClose);
+  document.addEventListener('keydown', onPopupErrorClose);
   errorButton.addEventListener('click', () => closeErrorPopup());
 };
 
@@ -181,14 +183,14 @@ const onErrorFormSend = () => {
 };
 
 // отменяет обработчик Esc при фокусе
-const canсelsHandlerFocusInEscapeKey = (evt) => {
+const canсelsFocusInEscapeKey = (evt) => {
   if (isEscapeKey(evt)) {
     evt.stopPropagation();
   }
 };
 
-textHashtags.addEventListener('keydown', canсelsHandlerFocusInEscapeKey);
-textComment.addEventListener('keydown', canсelsHandlerFocusInEscapeKey);
+textHashtags.addEventListener('keydown', canсelsFocusInEscapeKey);
+textComment.addEventListener('keydown', canсelsFocusInEscapeKey);
 
 // отправка формы
 const setFormUpload = () => {

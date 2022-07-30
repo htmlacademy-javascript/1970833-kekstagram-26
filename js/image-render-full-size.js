@@ -13,12 +13,14 @@ const pictureLikesCount = pictureContainer.querySelector('.likes-count');
 const commentCount = pictureContainer.querySelector('.social__comment-count');
 const commentContainer = pictureContainer.querySelector('.social__comments');
 const commentItem = pictureContainer.querySelector('.social__comment');
-const bottonLoadComments = pictureContainer.querySelector('.social__comments-loader');
+const buttonLoadComments = pictureContainer.querySelector('.social__comments-loader');
 
 const commentFragment = document.createDocumentFragment();
 
+let onButtonLoadCommentsClick = null;
+
 // закрытие полноэкранного изображения
-const closeFullPicture = (evt) => {
+const onFullPictureClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closePicture();
@@ -28,8 +30,8 @@ const closeFullPicture = (evt) => {
 function closePicture () {
   pictureContainer.classList.add('hidden');
   body.classList.remove('modal-open');
-  document.removeEventListener('keydown', closeFullPicture);
-  pictureCloseButton.removeEventListener('click', () => closePicture());
+  document.removeEventListener('keydown', onFullPictureClose);
+  pictureCloseButton.removeEventListener('click', closePicture);
 }
 
 // отображение одного комментария
@@ -44,7 +46,7 @@ const renderComment = (({avatar, message, name}) => {
 
 // отображение всех комментариев
 const renderComments = (comments, countAddComments) => {
-  bottonLoadComments.classList.remove('hidden');
+  buttonLoadComments.classList.remove('hidden');
   const countLoadComments = countAddComments * QUANTITY_ADD_COMMENTS;
   const countAllComments = comments.length;
 
@@ -55,11 +57,8 @@ const renderComments = (comments, countAddComments) => {
   }
 
   if (countAllComments <= countLoadComments) {
-    bottonLoadComments.classList.add('hidden');
-    bottonLoadComments.removeEventListener('click', () => {
-      countAddComments++;
-      renderComments(comments, countAddComments);
-    });
+    buttonLoadComments.classList.add('hidden');
+    buttonLoadComments.removeEventListener('click', onButtonLoadCommentsClick);
   } else {
     commentCount.classList.remove('hidden');
   }
@@ -82,11 +81,14 @@ const renderFullPicture = ({url, description, likes, comments}) => {
 
   renderComments(comments, countAddComments);
   pictureCloseButton.addEventListener('click', () => closePicture());
-  document.addEventListener('keydown', closeFullPicture);
-  bottonLoadComments.addEventListener('click', () => {
+  document.addEventListener('keydown', onFullPictureClose);
+
+  onButtonLoadCommentsClick = () => {
     countAddComments++;
     renderComments(comments, countAddComments);
-  });
+  };
+
+  buttonLoadComments.addEventListener('click', onButtonLoadCommentsClick);
 };
 
 export {renderFullPicture};

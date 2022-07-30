@@ -81,10 +81,10 @@ const imageEditing = () => {
     previewImage.style.transform = `scale(${imageScaleValue / 100})`;
   };
 
-  const clickIncrementButton = () => imageScaleChange(true);
-  const clickDecrementButton = () => imageScaleChange(false);
-  incrementScaleImage.addEventListener('click', clickIncrementButton);
-  decrementScaleImage.addEventListener('click', clickDecrementButton);
+  const onIncrementButtonClick = () => imageScaleChange(true);
+  const onDecrementButtonClick = () => imageScaleChange(false);
+  incrementScaleImage.addEventListener('click', onIncrementButtonClick);
+  decrementScaleImage.addEventListener('click', onDecrementButtonClick);
 
   // слайдер изменения уровня эффекта
   noUiSlider.create(sliderContainer, {
@@ -98,7 +98,7 @@ const imageEditing = () => {
   });
 
   // переключение эффектов
-  const changeEffect = (evt) => {
+  const onEffectChange = (evt) => {
     if (evt.target.value === VALUE_NONE) {
       chooseEffectDefault();
     } else {
@@ -119,7 +119,7 @@ const imageEditing = () => {
       sliderContainer.noUiSlider.set(maxEffectSlider);
     }
   };
-  effectsList.addEventListener('change', changeEffect);
+  effectsList.addEventListener('change', onEffectChange);
 
   // интенсивность эффектов
   sliderContainer.noUiSlider.on('update', () => {

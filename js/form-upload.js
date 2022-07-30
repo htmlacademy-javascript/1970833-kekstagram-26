@@ -33,7 +33,7 @@ const errorButton = errorContainer.querySelector('.error__button');
 
 const submitButton = document.querySelector('#upload-submit');
 
-const getPopupEscKeydown = (evt) => {
+const onPopupEscKeydown = (evt) => {
   if (isEscapeKey(evt) && !body.contains(errorContainer)) {
     evt.preventDefault();
     closelImgUpload();
@@ -44,7 +44,7 @@ const getPopupEscKeydown = (evt) => {
 const openUploadFile = () => {
   imgUpload.classList.remove('hidden');
   body.classList.add('modal-open');
-  document.addEventListener('keydown', getPopupEscKeydown);
+  document.addEventListener('keydown', onPopupEscKeydown);
   previewImage.style.transform = `scale(${SCALE_DEFAULT})`;
   scaleControlImage.value = `${SCALE_VALUE_DEFAULT}%`;
   chooseEffectDefault();
@@ -56,7 +56,7 @@ uploadFile.addEventListener('change', openUploadFile);
 function closelImgUpload() {
   imgUpload.classList.add('hidden');
   body.classList.remove('modal-open');
-  document.removeEventListener('keydown', getPopupEscKeydown);
+  document.removeEventListener('keydown', onPopupEscKeydown);
   uploadFile.value = '';
   textHashtags.value = '';
   textComment.value = '';
@@ -114,14 +114,14 @@ const unblockSubmitButton = () => {
 };
 
 // закрытие окна об успешной отправке
-const getPopupSuccessClose = (evt) => {
+const onPopupSuccessClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
     closeSuccessPopup();
   }
 };
 
-const getSuccessContainerClick = (evt) => {
+const onSuccessContainerClick = (evt) => {
   if (evt.target === successContainer) {
     closeSuccessPopup();
   }
@@ -129,16 +129,16 @@ const getSuccessContainerClick = (evt) => {
 
 function closeSuccessPopup () {
   successContainer.remove();
-  document.removeEventListener('click', getSuccessContainerClick);
-  document.removeEventListener('keydown', getPopupSuccessClose);
+  document.removeEventListener('click', onSuccessContainerClick);
+  document.removeEventListener('keydown', onPopupSuccessClose);
   successButton.addEventListener('click', () => closeSuccessPopup());
 }
 
 // открытие окна об успешной отправке
 const showSuccessPopup = () => {
   body.append(successContainer);
-  document.addEventListener('click', getSuccessContainerClick);
-  document.addEventListener('keydown', getPopupSuccessClose);
+  document.addEventListener('click', onSuccessContainerClick);
+  document.addEventListener('keydown', onPopupSuccessClose);
   successButton.addEventListener('click', () => closeSuccessPopup());
 };
 
@@ -156,7 +156,7 @@ const onPopupErrorClose = (evt) => {
   }
 };
 
-const getErrorContainerClick = (evt) => {
+const onErrorContainerClick = (evt) => {
   if (evt.target === errorContainer) {
     closeErrorPopup();
   }
@@ -164,15 +164,15 @@ const getErrorContainerClick = (evt) => {
 
 function closeErrorPopup () {
   errorContainer.remove();
-  document.removeEventListener('click', getErrorContainerClick);
+  document.removeEventListener('click', onErrorContainerClick);
   document.removeEventListener('keydown', onPopupErrorClose);
-  errorButton.removeEventListener('click', () => closeErrorPopup());
+  errorButton.removeEventListener('click', closeErrorPopup);
 }
 
 // открытие окна об ошибке
 const showErrorPopup = () => {
   body.append(errorContainer);
-  document.addEventListener('click', getErrorContainerClick);
+  document.addEventListener('click', onErrorContainerClick);
   document.addEventListener('keydown', onPopupErrorClose);
   errorButton.addEventListener('click', () => closeErrorPopup());
 };
@@ -183,14 +183,14 @@ const onErrorFormSend = () => {
 };
 
 // отменяет обработчик Esc при фокусе
-const canсelsFocusInEscapeKey = (evt) => {
+const onFocusInEscapeKeyCancels = (evt) => {
   if (isEscapeKey(evt)) {
     evt.stopPropagation();
   }
 };
 
-textHashtags.addEventListener('keydown', canсelsFocusInEscapeKey);
-textComment.addEventListener('keydown', canсelsFocusInEscapeKey);
+textHashtags.addEventListener('keydown', onFocusInEscapeKeyCancels);
+textComment.addEventListener('keydown', onFocusInEscapeKeyCancels);
 
 // отправка формы
 const setFormUpload = () => {

@@ -32,6 +32,7 @@ function onPictureClose () {
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onFullPictureClose);
   pictureCloseButton.removeEventListener('click', onPictureClose);
+  buttonLoadComments.removeEventListener('click', onButtonLoadCommentsClick);
 }
 
 // отображение одного комментария
@@ -58,7 +59,6 @@ const renderComments = (comments, countAddComments) => {
 
   if (countAllComments <= countLoadComments) {
     buttonLoadComments.classList.add('hidden');
-    buttonLoadComments.removeEventListener('click', onButtonLoadCommentsClick);
   } else {
     commentCount.classList.remove('hidden');
   }

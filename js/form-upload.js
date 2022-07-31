@@ -36,12 +36,12 @@ const submitButton = document.querySelector('#upload-submit');
 const onPopupEscKeydown = (evt) => {
   if (isEscapeKey(evt) && !body.contains(errorContainer)) {
     evt.preventDefault();
-    closelImgUpload();
+    onImgUploadClose();
   }
 };
 
 // открытие формы редактирования изображения
-const openUploadFile = () => {
+const onUploadFileOpen = () => {
   imgUpload.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPopupEscKeydown);
@@ -50,10 +50,10 @@ const openUploadFile = () => {
   chooseEffectDefault();
 };
 
-uploadFile.addEventListener('change', openUploadFile);
+uploadFile.addEventListener('change', onUploadFileOpen);
 
 // закрытие формы редактирования изображения
-function closelImgUpload() {
+function onImgUploadClose() {
   imgUpload.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPopupEscKeydown);
@@ -64,9 +64,7 @@ function closelImgUpload() {
   uploadForm.reset();
 }
 
-buttonCancelUpload.addEventListener('click', () => {
-  closelImgUpload();
-});
+buttonCancelUpload.addEventListener('click', onImgUploadClose);
 
 // валидация формы добавления изображения (строка хэш-теги)
 const validateTextHashtags = (text) => {
@@ -117,21 +115,21 @@ const unblockSubmitButton = () => {
 const onPopupSuccessClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeSuccessPopup();
+    onSuccessPopupClose();
   }
 };
 
 const onSuccessContainerClick = (evt) => {
   if (evt.target === successContainer) {
-    closeSuccessPopup();
+    onSuccessPopupClose();
   }
 };
 
-function closeSuccessPopup () {
+function onSuccessPopupClose () {
   successContainer.remove();
   document.removeEventListener('click', onSuccessContainerClick);
   document.removeEventListener('keydown', onPopupSuccessClose);
-  successButton.addEventListener('click', () => closeSuccessPopup());
+  successButton.addEventListener('click', onSuccessPopupClose);
 }
 
 // открытие окна об успешной отправке
@@ -139,11 +137,11 @@ const showSuccessPopup = () => {
   body.append(successContainer);
   document.addEventListener('click', onSuccessContainerClick);
   document.addEventListener('keydown', onPopupSuccessClose);
-  successButton.addEventListener('click', () => closeSuccessPopup());
+  successButton.addEventListener('click', onSuccessPopupClose);
 };
 
 const onSuccessFormSend = () => {
-  closelImgUpload();
+  onImgUploadClose();
   showSuccessPopup();
   unblockSubmitButton();
 };
@@ -152,21 +150,21 @@ const onSuccessFormSend = () => {
 const onPopupErrorClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closeErrorPopup();
+    onErrorPopupClose();
   }
 };
 
 const onErrorContainerClick = (evt) => {
   if (evt.target === errorContainer) {
-    closeErrorPopup();
+    onErrorPopupClose();
   }
 };
 
-function closeErrorPopup () {
+function onErrorPopupClose () {
   errorContainer.remove();
   document.removeEventListener('click', onErrorContainerClick);
   document.removeEventListener('keydown', onPopupErrorClose);
-  errorButton.removeEventListener('click', closeErrorPopup);
+  errorButton.removeEventListener('click', onErrorPopupClose);
 }
 
 // открытие окна об ошибке
@@ -174,7 +172,7 @@ const showErrorPopup = () => {
   body.append(errorContainer);
   document.addEventListener('click', onErrorContainerClick);
   document.addEventListener('keydown', onPopupErrorClose);
-  errorButton.addEventListener('click', () => closeErrorPopup());
+  errorButton.addEventListener('click', onErrorPopupClose);
 };
 
 const onErrorFormSend = () => {

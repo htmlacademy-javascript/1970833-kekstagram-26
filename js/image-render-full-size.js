@@ -23,15 +23,15 @@ let onButtonLoadCommentsClick = null;
 const onFullPictureClose = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
-    closePicture();
+    onPictureClose();
   }
 };
 
-function closePicture () {
+function onPictureClose () {
   pictureContainer.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onFullPictureClose);
-  pictureCloseButton.removeEventListener('click', closePicture);
+  pictureCloseButton.removeEventListener('click', onPictureClose);
 }
 
 // отображение одного комментария
@@ -80,7 +80,7 @@ const renderFullPicture = ({url, description, likes, comments}) => {
   pictureLikesCount.textContent = likes;
 
   renderComments(comments, countAddComments);
-  pictureCloseButton.addEventListener('click', () => closePicture());
+  pictureCloseButton.addEventListener('click', onPictureClose);
   document.addEventListener('keydown', onFullPictureClose);
 
   onButtonLoadCommentsClick = () => {

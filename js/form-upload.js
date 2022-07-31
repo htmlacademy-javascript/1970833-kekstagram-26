@@ -45,6 +45,7 @@ const onUploadFileOpen = () => {
   imgUpload.classList.remove('hidden');
   body.classList.add('modal-open');
   document.addEventListener('keydown', onPopupEscKeydown);
+  buttonCancelUpload.addEventListener('click', onImgUploadClose);
   previewImage.style.transform = `scale(${SCALE_DEFAULT})`;
   scaleControlImage.value = `${SCALE_VALUE_DEFAULT}%`;
   chooseEffectDefault();
@@ -57,14 +58,13 @@ function onImgUploadClose() {
   imgUpload.classList.add('hidden');
   body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPopupEscKeydown);
+  buttonCancelUpload.removeEventListener('click', onImgUploadClose);
   uploadFile.value = '';
   textHashtags.value = '';
   textComment.value = '';
   pristine.validate();
   uploadForm.reset();
 }
-
-buttonCancelUpload.addEventListener('click', onImgUploadClose);
 
 // валидация формы добавления изображения (строка хэш-теги)
 const validateTextHashtags = (text) => {
@@ -129,7 +129,7 @@ function onSuccessPopupClose () {
   successContainer.remove();
   document.removeEventListener('click', onSuccessContainerClick);
   document.removeEventListener('keydown', onPopupSuccessClose);
-  successButton.addEventListener('click', onSuccessPopupClose);
+  successButton.removeEventListener('click', onSuccessPopupClose);
 }
 
 // открытие окна об успешной отправке
